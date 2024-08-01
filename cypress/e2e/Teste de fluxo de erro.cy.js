@@ -1,15 +1,12 @@
 describe('Validação de mensagens de erro', () => {
     beforeEach(() => {
-        // Limpar cookies e armazenamento local
         cy.clearCookies();
         cy.clearLocalStorage();
 
-        // Definir a resolução da tela
         cy.viewport(1366, 768);
 
-        // Visitar a URL e aguardar 10 segundos
         cy.visit('https://web.superfrete.com/');
-        cy.wait(10000); // Espera 10 segundos para garantir que todos os serviços e elementos carreguem
+        cy.get('body', { timeout: 120000 }).should('be.visible'); 
     });
 
     it('Não deve calcular o frete sem CEP de origem - CEP EM BRANCO', () => {
@@ -32,11 +29,10 @@ describe('Validação de mensagens de erro', () => {
         cy.get('[data-cy="calculator-submit"]')
             .click();
         cy.contains('CEP de origem é obrigatório')
-        should('be.visible');
+            .should('be.visible');
     });
 
     it('Não deve calcular o frete sem CEP de origem - CEP INCORRETO', () => {
-        cy.visit('https://web.superfrete.com/');
         cy.get('#originPostcode')
             .type('0');
         cy.get('#object_format')
@@ -62,7 +58,6 @@ describe('Validação de mensagens de erro', () => {
     });
 
     it('Não deve calcular o frete sem CEP de destino - CEP EM BRANCO', () => {
-        cy.visit('https://web.superfrete.com/');
         cy.get('#originPostcode')
             .type('08210745');
         cy.get('#object_format')
@@ -84,8 +79,8 @@ describe('Validação de mensagens de erro', () => {
         cy.contains('CEP de destino é obrigatório')
             .should('be.visible');
     });
+
     it('Não deve calcular o frete sem CEP de destino - INCORRETO', () => {
-        cy.visit('https://web.superfrete.com/');
         cy.get('#originPostcode')
             .type('08210745');
         cy.get('#object_format')
@@ -111,7 +106,6 @@ describe('Validação de mensagens de erro', () => {
     });
 
     it('Não deve calcular o frete com dimensões inválidas', () => {
-        cy.visit('https://web.superfrete.com/');
         cy.get('#originPostcode')
             .type('08210745');
         cy.get('#object_format')
@@ -138,6 +132,5 @@ describe('Validação de mensagens de erro', () => {
             .should('be.visible');
         cy.contains('Comprimento mínimo 13 cm.')
             .should('be.visible');
-
     });
 });
